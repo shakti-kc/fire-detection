@@ -2,9 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const csv = require("csvtojson");
-const fs = require("fs").promises;
+const fs = require("fs").promises; // For file system operations
 const path = require("path");
-require("./con_to_db");
+require("./con_to_db"); // This ensures mongoose connects on startup
 const Data = require("./dataModel");
 
 const app = express();
@@ -24,6 +24,7 @@ app.post("/data", async (req, res) => {
   const dataString = req.body.data;
   const dataArray = dataString.split(" ");
 
+  // Ensure that the received data has the correct number of elements
   if (dataArray.length !== 7) {
     return res.status(400).send("Invalid data format");
   }
@@ -48,55 +49,14 @@ app.post("/data", async (req, res) => {
 });
 
 app.get("/fire-data", async (req, res) => {
-  try {
-    const response = await fetch(
-      "https://firms.modaps.eosdis.nasa.gov/api/country/csv/API_KEY/VIIRS_SNPP_NRT/NPL/7"
-    );
-    const csvData = await response.text();
-    const jsonData = await csv().fromString(csvData);
-
-    const filePath = "E:\\Fire Detection System\\website\\public\\fire_risk.geojson";
-    const geojsonContent = {
-      type: "FeatureCollection",
-      features: jsonData.map((item) => ({
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [parseFloat(item.longitude), parseFloat(item.latitude)],
-        },
-        properties: {
-          country_id: item.country_id,
-          latitude: item.latitude,
-          longitude: item.longitude,
-          bright_ti4: item.bright_ti4,
-          scan: item.scan,
-          track: item.track,
-          acq_date: item.acq_date,
-          acq_time: item.acq_time,
-          satellite: item.satellite,
-          instrument: item.instrument,
-          confidence: item.confidence,
-          version: item.version,
-          bright_ti5: item.bright_ti5,
-          frp: item.frp,
-          daynight: item.daynight,
-        },
-      })),
-    };
-
-    await fs.writeFile(filePath, JSON.stringify(geojsonContent));
-    res.json({ msg: "success" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error fetching data");
-  }
+   
 });
 
 app.get("/device-data", async (req, res) => {
   try {
-    const deviceData = await Data.find(); 
+    const deviceData = await Data.find(); // Fetch all data from MongoDB
     
-    res.json(deviceData);
+    res.json(deviceData); // Send data as JSON response
   } catch (error) {
     console.error(error);
     res.status(500).send("Error fetching device data");
@@ -105,5 +65,6 @@ app.get("/device-data", async (req, res) => {
 
 
 app.listen(port, () => {
+  
   console.log(`Server running at http://localhost:${port}/`);
 });
