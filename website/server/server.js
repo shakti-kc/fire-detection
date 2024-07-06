@@ -1,10 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const csv = require("csvtojson");
-const fs = require("fs").promises; // For file system operations
-const path = require("path");
-require("./con_to_db"); // This ensures mongoose connects on startup
+require("./con_to_db");
 const Data = require("./dataModel");
 
 const app = express();
@@ -24,7 +21,6 @@ app.post("/data", async (req, res) => {
   const dataString = req.body.data;
   const dataArray = dataString.split(" ");
 
-  // Ensure that the received data has the correct number of elements
   if (dataArray.length !== 7) {
     return res.status(400).send("Invalid data format");
   }
@@ -48,15 +44,11 @@ app.post("/data", async (req, res) => {
   }
 });
 
-app.get("/fire-data", async (req, res) => {
-   
-});
 
 app.get("/device-data", async (req, res) => {
   try {
-    const deviceData = await Data.find(); // Fetch all data from MongoDB
-    
-    res.json(deviceData); // Send data as JSON response
+    const deviceData = await Data.find();
+    res.json(deviceData);
   } catch (error) {
     console.error(error);
     res.status(500).send("Error fetching device data");
