@@ -1,0 +1,26 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [81.55679, 30.11441] },
+      "properties": {
+        "country_id": "NPL",
+        "latitude": "30.11441",
+        "longitude": "81.55679",
+        "bright_ti4": "343.68",
+        "scan": "0.59",
+        "track": "0.7",
+        "acq_date": "2024-07-01",
+        "acq_time": "835",
+        "satellite": "N",
+        "instrument": "VIIRS",
+        "confidence": "n",
+        "version": "2.0NRT",
+        "bright_ti5": "289.51",
+        "frp": "11.65",
+        "daynight": "D"
+      }
+    }
+  ]
+}

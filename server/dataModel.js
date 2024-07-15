@@ -1,4 +1,3 @@
-// dataModel.js
 const mongoose = require('mongoose');
 
 const dataSchema = new mongoose.Schema({
@@ -29,7 +28,12 @@ const dataSchema = new mongoose.Schema({
   longitude: {
     type: Number,
     required: true,
-  }
+  },
+  isFireDetected: {
+    type: Boolean,
+    required: true,
+  },
+  
 }, { timestamps: true });
 
 const Data = mongoose.model('data', dataSchema);
